@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0d0f14">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="HealthBit">
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./logo.jpg">
+<title>HealthBit</title>
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+<!-- PAGE 1: HÔM NAY -->
+<div class="page active" id="pg-today">
+  <div class="p1-header">
+    <div class="logo-wrap">
+      <img src="./logo.jpg" class="logo-img" alt="HealthBit">
+      <div class="logo">Health<em>Bit</em></div>
+    </div>
+    <div class="header-right">
+      <button class="btn-bell" id="btn-bell" onclick="openRemind()">🔔</button>
+      <div class="streak-pill">🔥 <span class="n" id="s-num">0</span> ngày</div>
+    </div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-meta"><span>Lộ trình 30 ngày</span><span id="prog-text">Ngày 1/30</span></div>
+    <div class="prog-bar"><div class="prog-fill" id="prog-fill" style="width:3%"></div></div>
+  </div>
+  <div class="lesson-wrap">
+    <div class="eyebrow">☀️ Bài học hôm nay</div>
+    <div class="lcard">
+      <div class="lcard-visual" id="lesson-visual"></div>
+      <div class="lcard-body" id="lesson-body"></div>
+    </div>
+  </div>
+  <div class="dots-wrap">
+    <div class="eyebrow">📅 30 ngày</div>
+    <div class="dots-grid" id="dots-grid"></div>
+  </div>
+</div>
+
+<!-- PAGE 2: FLASHCARD -->
+<div class="page" id="pg-flash">
+  <div class="p4-header">
+    <div class="eyebrow">🃏 Flashcard</div>
+    <h2>Ôn lại kiến thức</h2>
+    <p>Lật thẻ để nhớ sâu hơn mỗi bài đã học</p>
+  </div>
+
+  <div class="fc-toolbar">
+    <div class="fc-mode">
+      <button class="fc-mode-btn active" onclick="fcSetFilter('done',this)">✅ Đã học</button>
+      <button class="fc-mode-btn" onclick="fcSetFilter('all',this)">📚 Tất cả</button>
+    </div>
+    <button class="fc-shuffle" onclick="fcShuffle()" title="Xáo thẻ">🔀</button>
+  </div>
+
+  <div class="fc-controls">
+    <span class="fc-count" id="fc-count">0 / 0</span>
+    <div class="fc-filter">
+      <button class="fc-ftag active" onclick="fcSrcFilter('all',this)">Tất cả</button>
+      <button class="fc-ftag" onclick="fcSrcFilter('ah',this)">🔴 AH</button>
+      <button class="fc-ftag" onclick="fcSrcFilter('oc',this)">🔵 OC</button>
+      <button class="fc-ftag" onclick="fcSrcFilter('bn',this)">🟢 Burn</button>
+      <button class="fc-ftag" onclick="fcSrcFilter('bb',this)">🟣 BLS</button>
+    </div>
+  </div>
+
+  <div class="fc-wrap" id="fc-content"></div>
+</div>
+
+<!-- PAGE 3: THƯ VIỆN -->
+<div class="page" id="pg-lib">
+  <div class="p2-header">
+    <div class="eyebrow">📚 Thư viện</div>
+    <h2>Tất cả bài học</h2>
+    <p>Xem lại bất kỳ bài nào đã học</p>
+  </div>
+  <div class="filter-row">
+    <button class="ftag active" onclick="filter('all',this)">Tất cả</button>
+    <button class="ftag" onclick="filter('ah',this)">Atomic Habits</button>
+    <button class="ftag" onclick="filter('oc',this)">Obesity Code</button>
+    <button class="ftag" onclick="filter('bn',this)">Burn</button>
+    <button class="ftag" onclick="filter('bb',this)">Beyond BLS</button>
+  </div>
+  <div class="lib-list" id="lib-list"></div>
+</div>
+
+<!-- PAGE 4: TIẾN ĐỘ -->
+<div class="page" id="pg-prog">
+  <div class="p3-header">
+    <div class="eyebrow">📊 Tiến độ</div>
+    <h2>Hành trình của bạn</h2>
+    <p>Theo dõi quá trình học mỗi ngày</p>
+  </div>
+  <div class="stats-grid">
+    <div class="stat-card"><div class="stat-icon">🔥</div><div class="stat-val green" id="st-streak">0</div><div class="stat-label">Streak hiện tại</div></div>
+    <div class="stat-card"><div class="stat-icon">📖</div><div class="stat-val purple" id="st-done">0</div><div class="stat-label">Bài đã học</div></div>
+    <div class="stat-card"><div class="stat-icon">🏆</div><div class="stat-val orange" id="st-best">0</div><div class="stat-label">Streak tốt nhất</div></div>
+    <div class="stat-card"><div class="stat-icon">🎯</div><div class="stat-val red" id="st-acc">—</div><div class="stat-label">Độ chính xác</div></div>
+  </div>
+  <div class="cal-section"><div class="eyebrow">🗓 Lịch học</div><div class="cal-grid" id="cal-grid"></div></div>
+  <div class="book-section">
+    <div class="eyebrow">📚 Theo từng cuốn</div>
+    <div class="book-row">
+      <div class="book-progress-item"><div class="bp-top"><span class="bp-name">🔴 Atomic Habits</span><span class="bp-count" id="bp-ah">0/6</span></div><div class="bp-bar"><div class="bp-fill" id="bpf-ah" style="background:var(--red)"></div></div></div>
+      <div class="book-progress-item"><div class="bp-top"><span class="bp-name">🔵 The Obesity Code</span><span class="bp-count" id="bp-oc">0/8</span></div><div class="bp-bar"><div class="bp-fill" id="bpf-oc" style="background:#4fc4ff"></div></div></div>
+      <div class="book-progress-item"><div class="bp-top"><span class="bp-name">🟢 Burn</span><span class="bp-count" id="bp-bn">0/8</span></div><div class="bp-bar"><div class="bp-fill" id="bpf-bn" style="background:var(--green)"></div></div></div>
+      <div class="book-progress-item"><div class="bp-top"><span class="bp-name">🟣 Beyond BLS</span><span class="bp-count" id="bp-bb">0/8</span></div><div class="bp-bar"><div class="bp-fill" id="bpf-bb" style="background:var(--purple)"></div></div></div>
+    </div>
+  </div>
+  <div class="acc-section">
+    <div class="eyebrow">🧠 Quiz</div>
+    <div class="acc-card">
+      <div class="acc-top"><span class="acc-title">Tỷ lệ trả lời đúng</span><span class="acc-pct" id="acc-pct">—</span></div>
+      <div class="acc-bar-wrap"><div class="acc-bar"><div class="acc-fill" id="acc-fill" style="width:0%"></div></div></div>
+      <div class="acc-sub" id="acc-sub">Chưa có dữ liệu. Hãy học bài đầu tiên!</div>
+    </div>
+  </div>
+</div>
+
+<!-- OVERLAY -->
+<div class="overlay" id="overlay">
+  <div class="ov-emoji">🎉</div>
+  <div class="ov-title">Hoàn thành rồi!</div>
+  <div class="ov-sub">Kiến thức nhỏ mỗi ngày — thay đổi lớn theo thời gian.</div>
+  <div class="ov-streak"><div class="n" id="ov-n">1</div><div class="l">🔥 ngày liên tiếp</div></div>
+  <button class="btn-close2" onclick="closeOv()">Về trang chính</button>
+</div>
+
+<!-- REMIND MODAL -->
+<div class="modal-bg" id="modal-bg" onclick="closeRemind()"></div>
+<div class="modal" id="modal-remind">
+  <div class="modal-title">🔔 Nhắc nhở hàng ngày</div>
+  <div class="modal-desc">Chọn giờ bạn muốn được nhắc học mỗi ngày.</div>
+  <div class="time-picker">
+    <label>Giờ học:</label>
+    <input type="time" id="remind-time" value="08:00">
+  </div>
+  <div class="remind-status" id="remind-status"></div>
+  <div class="modal-btns">
+    <button class="btn-remind-save" onclick="saveRemind()">✅ Bật nhắc nhở</button>
+    <button class="btn-remind-off" onclick="offRemind()">🔕 Tắt</button>
+  </div>
+  <div class="remind-note">
+    <strong>Lưu ý:</strong> Trình duyệt cần cấp quyền thông báo. Mở app mỗi ngày để nhắc nhở hoạt động.
+  </div>
+</div>
+
+<!-- TAB BAR — 4 tabs -->
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="goto('today',this)"><span class="ti">☀️</span><span>Hôm nay</span></button>
+  <button class="tab-btn" onclick="goto('flash',this);initFlashcard()"><span class="ti">🃏</span><span>Flashcard</span></button>
+  <button class="tab-btn" onclick="goto('lib',this)"><span class="ti">📚</span><span>Thư viện</span></button>
+  <button class="tab-btn" onclick="goto('prog',this)"><span class="ti">📊</span><span>Tiến độ</span></button>
+</div>
+
+<script src="./lessons.js"></script>
+<script src="./app.js"></script>
+<script src="./flashcard.js"></script>
+<script src="./remind.js"></script>
+<script>
+// Flashcard src filter
+let fcSrcActive = 'all';
+function fcSrcFilter(src, btn) {
+  fcSrcActive = src;
+  document.querySelectorAll('.fc-ftag').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  // Rebuild deck with both filters
+  const isDoneOnly = fcFilter === 'done';
+  let pool = isDoneOnly ? LESSONS.filter(l => st.done.includes(l.d)) : LESSONS;
+  if (src !== 'all') pool = pool.filter(l => l.s === src);
+  fcCards = [...pool];
+  fcIndex = 0; fcIsFlipped = false;
+  renderFC();
+}
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));
+}
+</script>
+</body>
+</html>
